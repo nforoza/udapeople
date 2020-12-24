@@ -80,7 +80,14 @@ jobs:
       # Checkout code from git
       - checkout
       # Restore from cache
+      - restore_cache:
+          keys: [frontend/node_modules]
       # Your job code here
+      - run:
+          name: Front-End test
+          command: |
+            cd ./frontend
+            npm run test
                 
   test-backend:
     docker:
@@ -89,7 +96,16 @@ jobs:
       # Checkout code from git
       - checkout
       # Restore from cache
+      - restore_cache:
+          keys: [backend/node_modules]
       # Your job code here
+      - run:
+          name: Back End test
+          command: |
+            cd ./backend
+            npm run test
+
+
             
   scan-frontend:
     docker:
@@ -98,7 +114,14 @@ jobs:
       # Checkout code from git
       - checkout
       # Restore from cache
+      - restore_cache:
+          keys: [frontend/node_modules]
       # Your job code here
+      - run: 
+          name: Front-End Analyze
+          command: |
+            cd ./frontend
+            npm audit --audit-level=critical 
 
   scan-backend:
     docker:
@@ -107,7 +130,14 @@ jobs:
       # Checkout code from git
       - checkout
       # Restore from cache
+      - restore_cache:
+          keys: [backend/node_modules]
       # Your job code here
+      - run:
+          name: Back.End Analyze
+          command: |
+            cd ./backend
+            npm audit --audit-level=critical
 
   deploy-infrastructure:
     docker:
