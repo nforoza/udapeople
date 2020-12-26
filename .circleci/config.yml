@@ -50,7 +50,6 @@ jobs:
             # Your code here
             cd ./frontend
             npm i
-            npm install request --save
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
