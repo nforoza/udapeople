@@ -52,7 +52,7 @@ jobs:
             npm install
 
       - save_cache:
-          paths: [frontend/node_modules]
+          paths: [frontend/node_modules,frontend/package-lock.json]
           key: 'frontend-build-{{arch}}'
 
   build-backend:
@@ -69,7 +69,7 @@ jobs:
              cd ./backend
              npm install
       - save_cache:
-          paths: [backend/node_modules]
+          paths: [backend/node_modules,backend/package-lock.json]
           key: 'backend-build-{{arch}}'
 
   test-frontend:
