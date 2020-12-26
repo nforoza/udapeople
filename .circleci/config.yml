@@ -76,6 +76,9 @@ jobs:
   test-frontend:
     docker:
       - image: circleci/node:13.8.0
+    
+    resource_class: medium+
+    
     steps:
       # Checkout code from git
       - checkout
