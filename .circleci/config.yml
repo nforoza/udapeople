@@ -50,7 +50,7 @@ jobs:
             # Your code here
             cd ./frontend
             npm install
-            
+
       - save_cache:
           paths: [frontend/node_modules]
           key: 'frontend-build-{{arch}}'
@@ -61,7 +61,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          key: 'backend-build-{{arch}}'
       - run:
           name: Back-end build
           command: |
@@ -70,7 +70,7 @@ jobs:
              npm install
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build
+          key: 'backend-build-{{arch}}'
 
   test-frontend:
     docker:
@@ -97,7 +97,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [backend-build]
+          key: 'backend-build-{{arch}}'
       # Your job code here
       - run:
           name: Back End test
@@ -115,7 +115,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [frontend/node_modules]
+          key: 'frontend-build-{{arch}}'
       # Your job code here
       - run: 
           name: Front-End Analyze
@@ -131,7 +131,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [backend/node_modules]
+          key: 'backend-build-{{arch}}'
       # Your job code here
       - run:
           name: Back.End Analyze
