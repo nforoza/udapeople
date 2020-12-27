@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.1.4
+
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -55,6 +58,15 @@ jobs:
           paths: [frontend/node_modules,frontend/package-lock.json]
           key: 'frontend-build-{{arch}}-{{ checksum "frontend/package.json" }}'
 
+      - slack/notify:
+          event: fail
+          template: basic_fail_1 
+          
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
+   
+
   build-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -71,6 +83,14 @@ jobs:
       - save_cache:
           paths: [backend/node_modules,backend/package-lock.json]
           key: 'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
+      
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
 
   test-frontend:
     docker:
@@ -88,6 +108,13 @@ jobs:
           command: |
             cd ./frontend
             npm run test
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
                 
   test-backend:
     docker:
@@ -104,6 +131,13 @@ jobs:
           command: |
             cd ./backend
             npm run test
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
 
 
             
@@ -121,7 +155,14 @@ jobs:
           name: Front-End Analyze
           command: |
             cd ./frontend
-            npm audit --audit-level=critical 
+            npm audit --audit-level=critical
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1 
 
   scan-backend:
     docker:
@@ -138,6 +179,13 @@ jobs:
           command: |
             cd ./backend
             npm audit --audit-level=critical
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
 
   deploy-infrastructure:
     docker:
@@ -173,6 +221,14 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
+      
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
       # Here's where you will add some code to rollback on failure      
 
   configure-infrastructure:
@@ -196,6 +252,13 @@ jobs:
           command: |
             # Your code here
             ansible-playbook -i inventory.txt playbook.yml
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
       # Here's where you will add some code to rollback on failure      
 
   run-migrations:
@@ -214,6 +277,14 @@ jobs:
           command: |
             # Your code here
             exit 1
+      
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
      # Here's where you will add some code to rollback on failure      
 
   deploy-frontend:
@@ -236,6 +307,14 @@ jobs:
           name: Deploy frontend objects
           command: |
             # your code here
+
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
       # Here's where you will add some code to rollback on failure      
                     
   deploy-backend:
@@ -257,6 +336,13 @@ jobs:
           name: Deploy backend
           command: |
             # your code here
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
       # Here's where you will add some code to rollback on failure  
 
   smoke-test:
@@ -281,6 +367,13 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
       # Here's where you will add some code to rollback on failure  
 
   cloudfront-update:
@@ -297,6 +390,14 @@ jobs:
           name: Update cloudfront distribution
           command: |
             # your code here
+
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_pass_1
       # Here's where you will add some code to rollback on failure  
 
   cleanup:
@@ -319,6 +420,13 @@ jobs:
               then
                 # your code here
               fi
+        - slack/notify:
+            event: fail
+            template: basic_fail_1
+
+        - slack/notify:
+            event: pass
+            template: basic_pass_1
             
 
 workflows:
