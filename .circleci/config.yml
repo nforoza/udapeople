@@ -57,11 +57,36 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules,frontend/package-lock.json]
           key: 'frontend-build-{{arch}}-{{ checksum "frontend/package.json" }}'
+      
+      - run:
+          command: exit 1
 
       - slack/notify:
           channel: C01HKAG06F7
           event: fail
-          template: basic_fail_1 
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Udapeople build failed notification*",
+                      "emoji": true
+                    },                   
+                   	{
+                   		"type": "mrkdwn",
+                   		"text": "*Project*:$CIRCLE_PROJECT_REPONAME"
+                   	},
+                   	{
+                   		"type": "mrkdwn",
+                   		"text": "*When*:$(date +'%m/%d/%Y %T')"
+                   	}
+                  ]
+                }
+              ]
+            }
           
       - slack/notify:
           channel: C01HKAG06F7
@@ -72,17 +97,17 @@ jobs:
                   "type": "section",
                   "fields": [
                     {
-                      "type": "plain_text",
-                      "text": "*This is a text notification*",
+                      "type": "mrkdwn",
+                      "text": "*Build passed notification*",
                       "emoji": true
                     },                   
                    	{
                    		"type": "mrkdwn",
-                   		"text": "*Project*:\\n$CIRCLE_PROJECT_REPONAME"
+                   		"text": "*Project*:$CIRCLE_PROJECT_REPONAME"
                    	},
                    	{
                    		"type": "mrkdwn",
-                   		"text": "*When*:\\n$(date +'%m/%d/%Y %T')"
+                   		"text": "*When*:$(date +'%m/%d/%Y %T')"
                    	}
                   ]
                 }
