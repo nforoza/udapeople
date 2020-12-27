@@ -65,8 +65,23 @@ jobs:
           
       - slack/notify:
           channel: C01HKAG06F7
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "*This is a text notification*",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
           event: pass
-          template: basic_pass_1
+          
    
 
   build-backend:
