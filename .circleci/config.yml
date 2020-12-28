@@ -119,9 +119,6 @@ jobs:
                             "type": "plain_text",
                             "text": "$CIRCLE_BRANCH"
                           }
-
-
-
                         ]
                       }
                     ]
