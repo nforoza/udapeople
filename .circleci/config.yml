@@ -93,32 +93,6 @@ jobs:
               ]
             }
           
-      - slack/notify:
-          channel: C01HKAG06F7
-          event: pass
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Build passed notification*"
-                    },                   
-                   	{
-                   		"type": "mrkdwn",
-                   		"text": "*Project*:$CIRCLE_PROJECT_REPONAME"
-                   	},
-                   	{
-                   		"type": "mrkdwn",
-                   		"text": "*When*:$(date +'%m/%d/%Y %T')"
-                   	}
-                  ]
-                }
-              ]
-            }
-          
           
    
 
