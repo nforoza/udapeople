@@ -63,7 +63,7 @@ jobs:
 
       - slack/notify:
           channel: C01HKAG06F7
-          event: fail
+          event: always
           custom: |
             {
               "blocks": [
@@ -72,9 +72,14 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Udapeople build failed notification*",
+                      "text": "#*Udapeople build status notification*: $CCI_STATUS",
                       "emoji": true
-                    },                   
+                    },   
+                    {
+                      "type": "mrkdwn",
+                      "text": "#*Build URL*: $CIRCLE_BUILD_URL",
+                      "emoji": true
+                    },                
                    	{
                    		"type": "mrkdwn",
                    		"text": "*Project*:$CIRCLE_PROJECT_REPONAME"
