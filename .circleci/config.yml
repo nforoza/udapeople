@@ -71,7 +71,7 @@ jobs:
                         "type": "section",
                         "text": {
                           "type": "mrkdwn",
-                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME"
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
                         },
                         "block_id": "header"
                       },
