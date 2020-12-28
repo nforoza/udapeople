@@ -126,12 +126,51 @@ jobs:
           key: 'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
       
       - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
+          channel: C01HKAG06F7
+          event: always
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
 
   test-frontend:
     docker:
@@ -150,12 +189,51 @@ jobs:
             cd ./frontend
             npm run test
       - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
+          channel: C01HKAG06F7
+          event: always
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
                 
   test-backend:
     docker:
@@ -173,12 +251,51 @@ jobs:
             cd ./backend
             npm run test
       - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
+          channel: C01HKAG06F7
+          event: always
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
 
 
             
@@ -198,12 +315,51 @@ jobs:
             cd ./frontend
             npm audit --audit-level=critical
       - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1 
+          channel: C01HKAG06F7
+          event: always
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
 
   scan-backend:
     docker:
@@ -221,12 +377,51 @@ jobs:
             cd ./backend
             npm audit --audit-level=critical
       - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
+          channel: C01HKAG06F7
+          event: always
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
 
   deploy-infrastructure:
     docker:
@@ -240,19 +435,19 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              #--tags project=your-tag \
-              # --stack-name "your back-end stack name with workflow id" \
-              # --parameter-overrides ID="your workflow id"  
-              exit 1
+              --tags project=$CIRCLE_PROJECT_REPONAME \
+              --stack-name "udapeople-back-end-$CIRCLE_WORKFLOW_ID" \
+              --parameter-overrides ID="$CIRCLE_WORKFLOW_ID"  
+
       - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              #--tags project=your-tag \
-              # --stack-name "your front-end stack name with workflow id" \
-              # --parameter-overrides ID="your workflow id"  
-              exit 1
+              --tags project=$CIRCLE_PROJECT_REPONAME \
+              --stack-name "udapeople-front-end-$CIRCLE_WORKFLOW_ID" \
+              --parameter-overrides ID="$CIRCLE_WORKFLOW_ID"  
+
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -264,12 +459,51 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       
       - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
+          channel: C01HKAG06F7
+          event: always
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
       # Here's where you will add some code to rollback on failure      
 
   configure-infrastructure:
@@ -294,12 +528,51 @@ jobs:
             # Your code here
             ansible-playbook -i inventory.txt playbook.yml
       - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
+          channel: C01HKAG06F7
+          event: always
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
       # Here's where you will add some code to rollback on failure      
 
   run-migrations:
@@ -320,12 +593,51 @@ jobs:
             exit 1
       
       - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
+          channel: C01HKAG06F7
+          event: always
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
      # Here's where you will add some code to rollback on failure      
 
   deploy-frontend:
@@ -350,12 +662,51 @@ jobs:
             # your code here
 
       - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
+          channel: C01HKAG06F7
+          event: always
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
       # Here's where you will add some code to rollback on failure      
                     
   deploy-backend:
