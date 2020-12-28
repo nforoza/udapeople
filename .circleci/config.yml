@@ -69,28 +69,44 @@ jobs:
               "blocks": [
                 {
                   "type": "section",
+                  "text": "CircleCI pipeline status notification for  project: $CIRCLE_PROJECT_REPONAME"
+                  "block_id": "header"
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "#*Udapeople build status notification*: $CCI_STATUS",
-                      "emoji": true
+                      "text": "*Udapeople build status*",
+
                     },   
                     {
-                      "type": "mrkdwn",
-                      "text": "#*Build URL*: $CIRCLE_BUILD_URL",
-                      "emoji": true
-                    },                
-                   	{
+                      "type": "text",
+                      "text": "$CCI_STATUS",
+                    }                
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": "CircleCI build information"
+                  "block_id": "header"
+                  "fields": [
+                     {
                    		"type": "mrkdwn",
-                   		"text": "*Project*:$CIRCLE_PROJECT_REPONAME"
+                   		"text": "*Project*"
+                   	},
+                    {
+                   		"type": "text",
+                   		"text": "$CIRCLE_PROJECT_REPONAME"
+                   	},
+                    {
+                   		"type": "mrkdwn",
+                   		"text": "*Build date*"
                    	},
                    	{
-                   		"type": "mrkdwn",
-                   		"text": "*When*:$(date +'%m/%d/%Y %T')"
-                   	}
+                   		"type": "tezt",
+                   		"text": "$(date +'%m/%d/%Y %T')"
+                   	}              
                   ]
                 }
-              ]
+             ]
             }
           
           
