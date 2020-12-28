@@ -854,7 +854,7 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
-              only: [master]
+              only: [main]
       - configure-infrastructure:
           context:
             - circleci-udapeople-slack
