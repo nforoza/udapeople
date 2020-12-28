@@ -69,17 +69,17 @@ jobs:
               "blocks": [
                 {
                   "type": "section",
-                  "text": "CircleCI pipeline status notification for  project: $CIRCLE_PROJECT_REPONAME",
+                  "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME",
                   "block_id": "header",
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Udapeople build status*",
+                      "text": "*Udapeople build status*"
 
                     },   
                     {
                       "type": "text",
-                      "text": "$CCI_STATUS",
+                      "text": "$CCI_STATUS"
                     }                
                   ]
                 },
@@ -87,7 +87,8 @@ jobs:
                   "type": "section",
                   "text": "CircleCI build information",
                   "block_id": "body",
-                  "fields": [
+                  "fields": 
+                  [
                      {
                    		"type": "mrkdwn",
                    		"text": "*Project*"
