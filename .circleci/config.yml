@@ -58,9 +58,6 @@ jobs:
           paths: [frontend/node_modules,frontend/package-lock.json]
           key: 'frontend-build-{{arch}}-{{ checksum "frontend/package.json" }}'
       
-      - run:
-          command: exit 1
-
       - slack/notify:
           channel: C01HKAG06F7
           event: always
