@@ -65,50 +65,56 @@ jobs:
           channel: C01HKAG06F7
           event: always
           custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME",
-                  "block_id": "header",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Udapeople build status*"
-
-                    },   
-                    {
-                      "type": "text",
-                      "text": "$CCI_STATUS"
-                    }                
-                  ]
-                },
-                {
-                  "type": "section",
-                  "text": "CircleCI build information",
-                  "block_id": "body",
-                  "fields": 
-                  [
-                     {
-                   		"type": "mrkdwn",
-                   		"text": "*Project*"
-                   	},
-                    {
-                   		"type": "text",
-                   		"text": "$CIRCLE_PROJECT_REPONAME"
-                   	},
-                    {
-                   		"type": "mrkdwn",
-                   		"text": "*Build date*"
-                   	},
-                   	{
-                   		"type": "text",
-                   		"text": "$(date +'%m/%d/%Y %T')"
-                   	}              
-                  ]
-                }
-             ]
-            }
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Project*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_PROJECT_REPONAME"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
           
           
    
