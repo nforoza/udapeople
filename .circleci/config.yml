@@ -102,22 +102,6 @@ jobs:
                           {
                             "type": "plain_text",
                             "text": "$CIRCLE_BUILD_URL"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Repo*"
-                          },
-                          {
-                            "type": "plain_text",
-                            "text": "$CIRCLE_PR_REPONAME"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Branch*"
-                          },
-                          {
-                            "type": "plain_text",
-                            "text": "$CIRCLE_BRANCH"
                           }
                         ]
                       }
