@@ -69,8 +69,8 @@ jobs:
               "blocks": [
                 {
                   "type": "section",
-                  "text": "CircleCI pipeline status notification for  project: $CIRCLE_PROJECT_REPONAME"
-                  "block_id": "header"
+                  "text": "CircleCI pipeline status notification for  project: $CIRCLE_PROJECT_REPONAME",
+                  "block_id": "header",
                   "fields": [
                     {
                       "type": "mrkdwn",
@@ -85,8 +85,8 @@ jobs:
                 },
                 {
                   "type": "section",
-                  "text": "CircleCI build information"
-                  "block_id": "header"
+                  "text": "CircleCI build information",
+                  "block_id": "body",
                   "fields": [
                      {
                    		"type": "mrkdwn",
@@ -101,7 +101,7 @@ jobs:
                    		"text": "*Build date*"
                    	},
                    	{
-                   		"type": "tezt",
+                   		"type": "text",
                    		"text": "$(date +'%m/%d/%Y %T')"
                    	}              
                   ]
