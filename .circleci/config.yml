@@ -535,8 +535,9 @@ jobs:
           name: Configure server
           command: |
             # Your code here
-            cd ./circleci/ansible
+            cd ./project/.circleci/ansible/
             ansible-playbook -i inventory.txt configure-server.yml
+      
       - slack/notify:
           channel: C01HKAG06F7
           event: always
