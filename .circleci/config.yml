@@ -104,10 +104,7 @@ jobs:
                       }
                     ]
                   }
-          
-          
-   
-
+                 
   build-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -296,8 +293,6 @@ jobs:
                       }
                     ]
                   }
-
-
             
   scan-frontend:
     docker:
@@ -444,7 +439,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project=$CIRCLE_PROJECT_REPONAME \
+              --tags project = $CIRCLE_PROJECT_REPONAME \
               --stack-name "udapeople-front-end-$CIRCLE_WORKFLOW_ID" \
               --parameter-overrides ID="$CIRCLE_WORKFLOW_ID"  
 
@@ -452,7 +447,9 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             # Your code here
-            exit 1
+            aws ec2 describe-instances \
+                --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                --output text >> inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -460,7 +457,7 @@ jobs:
       
       - slack/notify:
           channel: C01HKAG06F7
-          event: always
+          event: fail
           custom: |
                {
                     "blocks": [
@@ -515,8 +512,10 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ["06:7c:db:71:49:2f:03:36:60:08:d2:fd:33:6f:17:d3"] # TODO fix the fingerprint
+          fingerprints: ["9b:e5:f4:53:a7:50:98:1b:74:4f:e3:a2:a2:f0:61:ab"]
       # attach workspace
+      - attach_workspace:
+          at: ./project/.circleci/ansible/
       - run:
           name: Install dependencies
           command: |
@@ -526,7 +525,8 @@ jobs:
           name: Configure server
           command: |
             # Your code here
-            ansible-playbook -i inventory.txt playbook.yml
+            cd ./circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
       - slack/notify:
           channel: C01HKAG06F7
           event: always
@@ -720,7 +720,7 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ["06:7c:db:71:49:2f:03:36:60:08:d2:fd:33:6f:17:d3"] # TODO fix the fingerprint
+          fingerprints: ["9b:e5:f4:53:a7:50:98:1b:74:4f:e3:a2:a2:f0:61:ab"] # TODO fix the fingerprint
       # attach workspace
       - run:
           name: Install dependencies
@@ -822,7 +822,6 @@ jobs:
             event: pass
             template: basic_pass_1
             
-
 workflows:
   default:
     jobs:
@@ -854,7 +853,8 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
-              only: [main]
+              only: 
+                - main
       - configure-infrastructure:
           context:
             - circleci-udapeople-slack
