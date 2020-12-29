@@ -185,6 +185,8 @@ jobs:
           command: |
             cd ./frontend
             npm run test
+          no_output_timeout: 15m
+          
       - slack/notify:
           channel: C01HKAG06F7
           event: always
