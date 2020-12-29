@@ -428,6 +428,10 @@ jobs:
       # Checkout code from git
       - checkout
       - run:
+          name: Install tar
+          command: |
+            yum install tar
+      - run:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
@@ -515,14 +519,18 @@ jobs:
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints: ["9b:e5:f4:53:a7:50:98:1b:74:4f:e3:a2:a2:f0:61:ab"]
-      # attach workspace
-      - attach_workspace:
-          at: ./project/.circleci/ansible/
+     
       - run:
           name: Install dependencies
           command: |
             # Your code here
+            apk add --no-cache tar
             apk add --update ansible
+      
+      # attach workspace
+      - attach_workspace:
+          at: ./project/.circleci/ansible/
+
       - run:
           name: Configure server
           command: |
