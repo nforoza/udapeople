@@ -186,7 +186,7 @@ jobs:
             cd ./frontend
             npm run test
           no_output_timeout: 15m
-          
+
       - slack/notify:
           channel: C01HKAG06F7
           event: always
@@ -441,7 +441,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project = $CIRCLE_PROJECT_REPONAME \
+              --tags project=$CIRCLE_PROJECT_REPONAME \
               --stack-name "udapeople-front-end-$CIRCLE_WORKFLOW_ID" \
               --parameter-overrides ID="$CIRCLE_WORKFLOW_ID"  
 
