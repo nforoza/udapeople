@@ -516,9 +516,10 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ["9b:e5:f4:53:a7:50:98:1b:74:4f:e3:a2:a2:f0:61:ab"]
+          fingerprints: ["bc:78:08:9c:b1:50:d0:77:b4:39:87:76:88:4e:13:8c"]
      
       - run:
           name: Install dependencies
@@ -530,7 +531,6 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: ~/
-
 
       - run:
           name: Configure server
