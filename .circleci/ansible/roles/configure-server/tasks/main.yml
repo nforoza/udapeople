@@ -1,7 +1,8 @@
 - name: "Update os packages"
   become: true
   apt:
-    update: yes
+    update_cache: yes
+    
 
 - name: "Install NodeJs"
   become: true
