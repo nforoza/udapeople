@@ -28,8 +28,8 @@ commands:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
       # Add parameter here
-      cloudformation-stack-id:
-        type: string      
+       workflow-id:
+        type: string   
     steps:
       - run:
           name: Revert migrations
@@ -39,8 +39,8 @@ commands:
             SUCCESS = curl -H "token: fc7be75f-2231-4f5f-968e-710726bd778e" --request GET https://api.memstash.io/values/aa1
             if(( $SUCCESS==1 )); 
             then
-            #  cd ~/project/backend
-            #  npm install
+               cd ~/project/backend
+               npm install
             #  Add revert code here. You can find this in the Getting Started section.
                npm run migrations:revert
             fi
@@ -525,7 +525,6 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints: ["bc:78:08:9c:b1:50:d0:77:b4:39:87:76:88:4e:13:8c"]
@@ -595,6 +594,14 @@ jobs:
                     ]
                   }
       # Here's where you will add some code to rollback on failure
+      # Install aws client 
+      - run:
+          name: Install aws cli for rollback procedure
+          when: on_fail 
+          command: |
+            pip install --upgrade pip 
+            pip install awscli 
+
       - destroy-environment:
           workflow-id: $CIRCLE_WORKFLOW_ID
             
@@ -602,10 +609,15 @@ jobs:
     docker:
       # Docker image here that supports NodeJS
       - image: circleci/node:13.8.0
+    
     steps:
       # Checkout code from git
       - checkout
-      
+
+      # Restore from cache
+      - restore_cache:
+          key: 'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
+
       - run:
           name: Run migrations
           command: |
@@ -624,7 +636,7 @@ jobs:
             
       - slack/notify:
           channel: C01HKAG06F7
-          event: always
+          event: fail
           custom: |
                {
                     "blocks": [
@@ -669,9 +681,9 @@ jobs:
                     ]
                   }
      # Here's where you will add some code to rollback on failure
-      - destroy-environment:
-          workflow-id: $CIRCLE_WORKFLOW_ID      
-
+      - revert-migrations:
+          workflow-id: $CIRCLE_WORKFLOW_ID
+        
   deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
@@ -758,6 +770,7 @@ jobs:
     docker:
       # Docker image here that supports Ansible
       - image: python:3.7-alpine3.11
+   
     steps:
       # Checkout code from git
       - checkout
@@ -829,7 +842,7 @@ jobs:
                       }
                     ]
                   }
-         # Here's where you will add some code to rollback on failure
+      # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow-id: $CIRCLE_WORKFLOW_ID 
 
@@ -843,24 +856,101 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
+            apk add --update curl
+      
+      - attach_workspace:
+          at: ~/
+      
       - run:
           name: Get backend url
           command: |
             # your code here
+            export BACKEND_IP=awk "NR==2" ~/project/.circleci/ansible/inventory.txt
+            export API_URL="http://${BACKEND_IP}:3030"
+      
       - run:
           name: Backend smoke test.
           command: |
-            # your code here
+              # your code here
+              if curl -s --head ${API_URL} # test if backend is running
+              then
+               return 0
+              else
+               return 1
+              fi
+
       - run:
           name: Frontend smoke test.
           command: |
             # your code here
+            export URL = "https://udapeople-${WorkflowID}.s3.amazonaws.com"
+            if curl -s --head ${URL} # test if backend is running
+              then
+               return 0
+              else
+               return 1
+              fi
       
       - slack/notify:
+          channel: C01HKAG06F7
           event: fail
-          template: basic_fail_1
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
 
-      # Here's where you will add some code to rollback on failure  
+      # Here's where you will add some code to rollback on failure
+      - run:
+          name: Install awscli for rollingback
+          when: on_fail
+          command: |
+            apk add  --no-cache \
+                        python3 \
+                        py3-pip \
+                    && pip3 install --upgrade pip \
+                    && pip3 install \
+                        awscli \
+                    && rm -rf /var/cache/apk/*
+
       - destroy-environment:
           workflow-id: $CIRCLE_WORKFLOW_ID
 
