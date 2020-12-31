@@ -34,7 +34,7 @@ commands:
       - run:
           name: Revert migrations
           # Add when this will run
-          # when: on_fail
+          when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             export SUCCESS=$(curl -H "token: fc7be75f-2231-4f5f-968e-710726bd778e" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID})
@@ -125,8 +125,9 @@ jobs:
              # Your code here
              cd ./backend
              npm install --package-lock
+             npm run build
       - save_cache:
-          paths: [backend/node_modules,backend/package-lock.json]
+          paths: [backend/node_modules,backend/package-lock.json,backend/dist]
           key: 'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
       
       - slack/notify:
@@ -631,8 +632,8 @@ jobs:
           command: |
             # Your code here
             cd ./backend
-            if(grep "Has been executed successfully" migrations_output.txt) || (grep "No migrations are pending" migrations_output.txt) ; then
-              curl -H "Content-Type: text/plain" -H "token: fc7be75f-2231-4f5f-968e-710726bd778e" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            if(grep "Has been executed successfully" migrations_output.txt); then
+              curl -H "Content-Type: text/plain" -H "token: fc7be75f-2231-4ff-968e-710726bd778e" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
             
       - slack/notify:
@@ -695,9 +696,13 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            # your code here
-            yum -y install nodejs npm
+            # your code here TODO node version should be consistent accross workflow
+            curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
+            yum install -y nodejs
       
+      - restore_cache:
+          key: 'frontend-build-{{arch}}-{{ checksum "frontend/package.json" }}'
+
       - attach_workspace:
           at: ~/
 
@@ -780,12 +785,16 @@ jobs:
       - add_ssh_keys:
            fingerprints: ["bc:78:08:9c:b1:50:d0:77:b4:39:87:76:88:4e:13:8c"]
      
+      - restore_cache:
+          key: 'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
+      
       - run:
           name: Install dependencies
           command: |
             # Your code here
             apk add --no-cache tar gzip
             apk add --update ansible
+            apk add --update curl
       
       # attach workspace
       - attach_workspace:
