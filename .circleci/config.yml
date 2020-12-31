@@ -630,7 +630,7 @@ jobs:
           command: |
             # Your code here
             cd ./backend
-            if(grep "has been executed successfully" migrations_output.txt); then
+            if(grep "Has been executed successfully" migrations_output.txt) || (grep "No migrations are pending" migrations_output.txt) ; then
               curl -H "Content-Type: text/plain" -H "token: fc7be75f-2231-4f5f-968e-710726bd778e" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
             
