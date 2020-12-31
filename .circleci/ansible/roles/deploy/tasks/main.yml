@@ -1,0 +1,6 @@
+- name: "Copy backend files"
+  copy:
+    src: ~/project/backend/dist/
+    dest: /home/ubuntu/udapeople/
+    owner: ubuntu
+

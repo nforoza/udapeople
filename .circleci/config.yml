@@ -8,15 +8,21 @@ commands:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
       # Add parameter here 
-      cloudformation-stack-id:
+     workflow-id:
         type: string 
     steps:
       - run:
-          name: Destroy environments
+          name: Destroy frontend environment
           when: on_fail
           command: |
-            # Your code here
-            exit 1
+            aws cloudformation delete-stack \
+              --stack-name "udapeople-front-end-<<parameters.workflow-id>>"
+      - run:
+          name: Destroy backend environmet
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack \
+              --stack-name "udapeople-back-end-<<parameters.workflow-id>>"
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -30,13 +36,13 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
+            SUCCESS = curl -H "token: fc7be75f-2231-4f5f-968e-710726bd778e" --request GET https://api.memstash.io/values/aa1
             if(( $SUCCESS==1 )); 
             then
             #  cd ~/project/backend
             #  npm install
             #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
+               npm run migrations:revert
             fi
             
 jobs:
@@ -509,20 +515,8 @@ jobs:
                     ]
                   }
       # Here's where you will add some code to rollback on failure
-      - run:
-          name: Add back-end ip to ansible inventory
-          event: fail
-          command: |
-            aws cloudformation delete-stack \
-              --stack-name "udapeople-front-end-$CIRCLE_WORKFLOW_ID"
-      
-      - run:
-          name: Ensure back-end infrastructure exists
-          event: fail
-          command: |
-            aws cloudformation delete-stack \
-              --stack-name "udapeople-back-end-$CIRCLE_WORKFLOW_ID"
-
+      - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID
 
   configure-infrastructure:
     docker:
@@ -531,7 +525,7 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      
+
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints: ["bc:78:08:9c:b1:50:d0:77:b4:39:87:76:88:4e:13:8c"]
@@ -556,7 +550,7 @@ jobs:
       
       - slack/notify:
           channel: C01HKAG06F7
-          event: always
+          event: fail
           custom: |
                {
                     "blocks": [
@@ -600,8 +594,10 @@ jobs:
                       }
                     ]
                   }
-      # Here's where you will add some code to rollback on failure      
-
+      # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID
+            
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
@@ -609,17 +605,23 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      
       - run:
           name: Run migrations
           command: |
             # Your code here
-            exit 1
+            cd ./backend
+            npm run migrations >> migrations_output.txt
+            
       - run:
           name: Send migration results to memstash
           command: |
             # Your code here
-            exit 1
-      
+            cd ./backend
+            if(grep "has been executed successfully" migrations_output.txt); then
+              curl -H "Content-Type: text/plain" -H "token: fc7be75f-2231-4f5f-968e-710726bd778e" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            fi
+            
       - slack/notify:
           channel: C01HKAG06F7
           event: always
@@ -666,7 +668,9 @@ jobs:
                       }
                     ]
                   }
-     # Here's where you will add some code to rollback on failure      
+     # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID      
 
   deploy-frontend:
     docker:
@@ -679,20 +683,30 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
+            yum -y install nodejs npm
+      
+      - attach_workspace:
+          at: ~/
+
       - run:
           name: Get backend url
           command: |
-            # your code here
+            # Get second line from inventory where the backend ip 
+            export BACKEND_IP=awk "NR==2" ~/project/.circleci/ansible/inventory.txt
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
       - run:
           name: Deploy frontend objects
           command: |
             # your code here
+            cd ./frontend
+            npm run build
+            cd ./dist
+            aws s3 sync . s3://udapeople-"${CIRCLE_WORKFLOW_ID}"/ --delete
 
       - slack/notify:
           channel: C01HKAG06F7
-          event: always
+          event: fail
           custom: |
                {
                     "blocks": [
@@ -736,7 +750,9 @@ jobs:
                       }
                     ]
                   }
-      # Here's where you will add some code to rollback on failure      
+      # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID      
                     
   deploy-backend:
     docker:
@@ -745,26 +761,77 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+     
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ["9b:e5:f4:53:a7:50:98:1b:74:4f:e3:a2:a2:f0:61:ab"] # TODO fix the fingerprint
-      # attach workspace
+           fingerprints: ["bc:78:08:9c:b1:50:d0:77:b4:39:87:76:88:4e:13:8c"]
+     
       - run:
           name: Install dependencies
           command: |
-            # your code here
+            # Your code here
+            apk add --no-cache tar gzip
+            apk add --update ansible
+      
+      # attach workspace
+      - attach_workspace:
+          at: ~/
+      
       - run:
-          name: Deploy backend
+          name: Copy Files to server
           command: |
-            # your code here
+            cd ~/project/.circleci/ansible/
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      
       - slack/notify:
+          channel: C01HKAG06F7
           event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
-      # Here's where you will add some code to rollback on failure  
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+         # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID 
 
   smoke-test:
     docker:
@@ -788,14 +855,14 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
+      
       - slack/notify:
           event: fail
           template: basic_fail_1
 
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
       # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID
 
   cloudfront-update:
     docker:
@@ -813,13 +880,54 @@ jobs:
             # your code here
 
       - slack/notify:
+          channel: C01HKAG06F7
           event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: basic_pass_1
+          custom: |
+               {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
+                        },
+                        "block_id": "header"
+                      },
+                      {
+                        "type": "section",
+                        "block_id": "body",
+                        "fields": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build status*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CCI_STATUS"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build date*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$(date +'%m/%d/%Y %T')"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Build URL*"
+                          },
+                          {
+                            "type": "plain_text",
+                            "text": "$CIRCLE_BUILD_URL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
       # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID
 
   cleanup:
       docker:
