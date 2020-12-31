@@ -36,7 +36,7 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            export SUCCESS = curl -H "token: fc7be75f-2231-4f5f-968e-710726bd778e" --request GET https://api.memstash.io/values/aa1
+            export SUCCESS = curl -H "token: fc7be75f-2231-4f5f-968e-710726bd778e" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             if(( $SUCCESS==1 )); 
             then
                cd ~/project/backend
