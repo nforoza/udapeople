@@ -118,7 +118,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: 'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
+          key: 'backend-build--1-{{arch}}-{{ checksum "backend/package.json" }}'
       - run:
           name: Back-end build
           command: |
@@ -128,7 +128,7 @@ jobs:
              npm run build
       - save_cache:
           paths: [backend/node_modules,backend/package-lock.json,backend/dist]
-          key: 'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
+          key: 'backend-build-1-{{arch}}-{{ checksum "backend/package.json" }}'
       
       - slack/notify:
           channel: C01HKAG06F7
@@ -250,7 +250,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          key: 'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
+          key: 'backend-build-1-{{arch}}-{{ checksum "backend/package.json" }}'
       # Your job code here
       - run:
           name: Back End test
@@ -374,7 +374,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          key:  'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
+          key:  'backend-build-1-{{arch}}-{{ checksum "backend/package.json" }}'
       # Your job code here
       - run:
           name: Back.End Analyze
@@ -701,7 +701,7 @@ jobs:
             yum install -y nodejs
       
       - restore_cache:
-          key: 'frontend-build-{{arch}}-{{ checksum "frontend/package.json" }}'
+          key: 'frontend-build-1-{{arch}}-{{ checksum "frontend/package.json" }}'
 
       - attach_workspace:
           at: ~/
@@ -786,7 +786,7 @@ jobs:
            fingerprints: ["bc:78:08:9c:b1:50:d0:77:b4:39:87:76:88:4e:13:8c"]
      
       - restore_cache:
-          key: 'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
+          key: 'backend-build-1-{{arch}}-{{ checksum "backend/package.json" }}'
       
       - run:
           name: Install dependencies
