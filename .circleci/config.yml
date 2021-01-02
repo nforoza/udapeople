@@ -894,8 +894,10 @@ jobs:
               # your code here
               export BACKEND_IP=$(awk "NR==2" ~/project/.circleci/ansible/inventory.txt)
               export API_URL="http://${BACKEND_IP}:3030"
-              
-              if (curl -s --head ${API_URL}); # test if backend is running
+              echo "Api URL ${API_URL}"
+              test = $(curl -v -s --head ${API_URL})
+              echo $test
+              if ($test); # test if backend is running
               then
                return 0
               else
@@ -906,7 +908,7 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-            export URL = "https://udapeople-${WorkflowID}.s3.amazonaws.com"
+            export URL="https://udapeople-${WorkflowID}.s3.amazonaws.com"
             if (curl -s --head ${URL}); # test if backend is running
               then
                return 0
