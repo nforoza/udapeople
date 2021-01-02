@@ -126,6 +126,7 @@ jobs:
              cd ./backend
              npm install --package-lock
              npm run build
+      
       - save_cache:
           paths: [backend/node_modules,backend/package-lock.json,backend/dist]
           key: 'backend-build-1-{{arch}}-{{ checksum "backend/package.json" }}'
@@ -700,6 +701,9 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_14.x | bash -
             yum install -y nodejs
             yum install -y tar
+            yum install -y curl
+            yum install -y gzip
+
       
       - restore_cache:
           key: 'frontend-build-1-{{arch}}-{{ checksum "frontend/package.json" }}'
@@ -788,6 +792,12 @@ jobs:
      
       - restore_cache:
           key: 'backend-build-1-{{arch}}-{{ checksum "backend/package.json" }}'
+
+      #cache is left in /home/circleci/ this step copies folders to home directory
+      - run:
+          name: Moves cache to current working directory
+          command: |
+            cp -r /home/circleci/* ~/
       
       - run:
           name: Install dependencies
