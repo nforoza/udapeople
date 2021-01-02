@@ -1002,7 +1002,7 @@ jobs:
              aws cloudformation deploy \
                 --template-file .circleci/files/cloudfront.yml \
                 --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID}"  \
-                --parameter-overrides PipelineID="${CIRCLE_WORKFLOW_ID}"
+                --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID}"
 
       - slack/notify:
           channel: C01HKAG06F7
