@@ -715,7 +715,7 @@ jobs:
           name: Get backend url
           command: |
             # Get second line from inventory where the backend ip 
-            export BACKEND_IP=awk "NR==2" ~/project/.circleci/ansible/inventory.txt
+            export BACKEND_IP=$(awk "NR==2" ~/project/.circleci/ansible/inventory.txt)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
       - run:
