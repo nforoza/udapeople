@@ -911,7 +911,7 @@ jobs:
           command: |
             # your code here
             export URL = "https://udapeople-${WorkflowID}.s3.amazonaws.com"
-            if (curl -s --head ${URL}) # test if backend is running
+            if (curl -s --head ${URL}); # test if backend is running
               then
                return 0
               else
@@ -1081,7 +1081,7 @@ jobs:
                 aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
                 aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
                 aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-                
+    
               fi
        
         - slack/notify:
