@@ -706,7 +706,7 @@ jobs:
 
       
       - restore_cache:
-          key: 'frontend-build-1-{{arch}}-{{ checksum "frontend/package.json" }}'
+          key: 'frontend-build-{{arch}}-{{ checksum "frontend/package.json" }}'
 
       - attach_workspace:
           at: ~/
