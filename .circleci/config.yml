@@ -708,6 +708,12 @@ jobs:
       - restore_cache:
           key: 'frontend-build-{{arch}}-{{ checksum "frontend/package.json" }}'
 
+      #cache is left in /home/circleci/ this step copies folders to home directory
+      - run:
+          name: Moves cache to current working directory
+          command: |
+            cp -r /home/circleci/* ~/
+
       - attach_workspace:
           at: ~/
 
