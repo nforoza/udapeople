@@ -899,7 +899,7 @@ jobs:
           name: Backend smoke test.
           command: |
               # your code here
-              if (curl -s --head ${API_URL}) # test if backend is running
+              if (curl -s --head ${API_URL}); # test if backend is running
               then
                return 0
               else
