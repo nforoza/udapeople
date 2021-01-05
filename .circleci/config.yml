@@ -118,7 +118,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: 'backend-build--1-{{arch}}-{{ checksum "backend/package.json" }}'
+          key: 'backend-build--2-{{arch}}-{{ checksum "backend/package.json" }}'
       - run:
           name: Back-end build
           command: |
@@ -128,9 +128,14 @@ jobs:
              npm run build
       
       - save_cache:
-          paths: [backend/node_modules,backend/package-lock.json,backend/dist]
-          key: 'backend-build-1-{{arch}}-{{ checksum "backend/package.json" }}'
+          paths: [backend/node_modules,backend/package-lock.json]
+          key: 'backend-build-2-{{arch}}-{{ checksum "backend/package.json" }}'
       
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/backend/dist/
+
       - slack/notify:
           channel: C01HKAG06F7
           event: always
@@ -251,7 +256,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          key: 'backend-build-1-{{arch}}-{{ checksum "backend/package.json" }}'
+          key: 'backend-build-2-{{arch}}-{{ checksum "backend/package.json" }}'
       # Your job code here
       - run:
           name: Back End test
@@ -375,7 +380,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          key:  'backend-build-1-{{arch}}-{{ checksum "backend/package.json" }}'
+          key:  'backend-build-2-{{arch}}-{{ checksum "backend/package.json" }}'
       # Your job code here
       - run:
           name: Back.End Analyze
@@ -797,7 +802,7 @@ jobs:
            fingerprints: ["bc:78:08:9c:b1:50:d0:77:b4:39:87:76:88:4e:13:8c"]
      
       - restore_cache:
-          key: 'backend-build-1-{{arch}}-{{ checksum "backend/package.json" }}'
+          key: 'backend-build-2-{{arch}}-{{ checksum "backend/package.json" }}'
 
       #cache is left in /home/circleci/ this step copies folders to home directory
       - run:
@@ -998,11 +1003,24 @@ jobs:
       - run:
           name: Update cloudfront distribution
           command: |
-            # your code here
+             export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
+             echo $OldWorkflowID
+             
+             export STACKS=$(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
+             echo $STACKS 
+
              aws cloudformation deploy \
                 --template-file .circleci/files/cloudfront.yml \
                 --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID}"  \
-                --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID}"
+                --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"\
+                --tags project=Udapeople
+              if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+              then
+                # your code here
+                aws s3 rm "s3://udapeople-${OldWorkflowID}/" --recursive
+                aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+                aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+              fi
 
       - slack/notify:
           channel: C01HKAG06F7
@@ -1067,11 +1085,10 @@ jobs:
               # your code here
               export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
               echo $OldWorkflowID
+              
               export STACKS=$(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
               echo $STACKS 
-        - run:
-            name: Remove old stacks and files
-            command: |
+
               if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
               then
                 # your code here
@@ -1185,7 +1202,3 @@ workflows:
           context:
             - circleci-udapeople-slack
           requires: [smoke-test]
-      - cleanup:
-          context:
-            - circleci-udapeople-slack
-          requires: [cloudfront-update]
