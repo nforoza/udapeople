@@ -15,6 +15,7 @@ commands:
           name: Destroy frontend environment
           when: on_fail
           command: |
+            aws s3 rm "s3://udapeople-<<parameters.workflow-id>>/" --recursive
             aws cloudformation delete-stack \
               --stack-name "udapeople-front-end-<<parameters.workflow-id>>"
       - run:
@@ -1014,10 +1015,11 @@ jobs:
                 --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID}"  \
                 --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"\
                 --tags project=Udapeople
-              if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+             
+             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
               then
                 # your code here
-                aws s3 rm "s3://udapeople-${OldWorkflowID}/" --recursive
+                aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
                 aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
                 aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
               fi
@@ -1072,78 +1074,6 @@ jobs:
       - destroy-environment:
           workflow-id: $CIRCLE_WORKFLOW_ID
 
-  cleanup:
-      docker:
-        # Docker image here
-        - image: amazon/aws-cli
-      steps:
-        # Checkout code from git
-        - checkout
-        - run:
-            name: Get old stack workflow id
-            command: |
-              # your code here
-              export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
-              echo $OldWorkflowID
-              
-              export STACKS=$(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
-              echo $STACKS 
-
-              if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-              then
-                # your code here
-                aws s3 rm "s3://udapeople-${OldWorkflowID}/" --recursive
-                aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-                aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-              fi
-       
-        - slack/notify:
-            channel: C01HKAG06F7
-            event: fail
-            custom: |
-               {
-                    "blocks": [
-                      {
-                        "type": "section",
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": "CircleCI pipeline status notification for project: $CIRCLE_PROJECT_REPONAME and branch: $CIRCLE_BRANCH"
-                        },
-                        "block_id": "header"
-                      },
-                      {
-                        "type": "section",
-                        "block_id": "body",
-                        "fields": [
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Build status*"
-                          },
-                          {
-                            "type": "plain_text",
-                            "text": "$CCI_STATUS"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Build date*"
-                          },
-                          {
-                            "type": "plain_text",
-                            "text": "$(date +'%m/%d/%Y %T')"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Build URL*"
-                          },
-                          {
-                            "type": "plain_text",
-                            "text": "$CIRCLE_BUILD_URL"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-            
 workflows:
   default:
     jobs:
