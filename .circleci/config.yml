@@ -1016,7 +1016,7 @@ jobs:
                 --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"\
                 --tags project=Udapeople
              
-             if [! -z ${OldWorkflowID}"]
+             if [! -z ${OldWorkflowID}]
              then
               if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
               then
