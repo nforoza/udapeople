@@ -68,7 +68,7 @@ jobs:
       
       - slack/notify:
           channel: C01HKAG06F7
-          event: always
+          event: fail
           custom: |
                {
                     "blocks": [
@@ -139,7 +139,7 @@ jobs:
 
       - slack/notify:
           channel: C01HKAG06F7
-          event: always
+          event: fail
           custom: |
                {
                     "blocks": [
@@ -204,7 +204,7 @@ jobs:
 
       - slack/notify:
           channel: C01HKAG06F7
-          event: always
+          event: fail
           custom: |
                {
                     "blocks": [
@@ -266,7 +266,7 @@ jobs:
             npm run test
       - slack/notify:
           channel: C01HKAG06F7
-          event: always
+          event: fail
           custom: |
                {
                     "blocks": [
@@ -328,7 +328,7 @@ jobs:
             npm audit --audit-level=critical
       - slack/notify:
           channel: C01HKAG06F7
-          event: always
+          event: fail
           custom: |
                {
                     "blocks": [
@@ -390,7 +390,7 @@ jobs:
             npm audit --audit-level=critical
       - slack/notify:
           channel: C01HKAG06F7
-          event: always
+          event: fail
           custom: |
                {
                     "blocks": [
