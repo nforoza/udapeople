@@ -1013,7 +1013,7 @@ jobs:
              export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
              
-             echo Old Workflow Id: $OldWorkflowID
+             echo Old Workflow Id: "${OldWorkflowID}"
 
              aws cloudformation deploy \
                   --template-file .circleci/files/cloudfront.yml \
