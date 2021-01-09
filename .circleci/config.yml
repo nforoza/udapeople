@@ -1021,7 +1021,7 @@ jobs:
                   --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
                   --tags project=Udapeople & 
 
-             if [[ "${STACKS[@]}" =~ "${$OldWorkflowID}" ]]
+             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
              then
                   # your code here
                   echo "Cleaning old stack"
