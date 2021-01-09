@@ -1011,7 +1011,7 @@ jobs:
              then
                   # your code here
                   echo "Cleaning old stack"
-                  aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+                  aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive --quiet
                   aws cloudformation delete-stack --stack-name "udapeople-front-end-${OldWorkflowID}"
                   aws cloudformation delete-stack --stack-name "udapeople-back-end-${OldWorkflowID}"
                   aws cloudformation delete-stack --stack-name "udapeople-cloudfront-${OldWorkflowID}"
