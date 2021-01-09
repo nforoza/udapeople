@@ -189,7 +189,10 @@ jobs:
       - image: circleci/node:13.8.0
 
     steps:
-      - exit 0
+      - run:
+          name: Dummy
+          command: |
+            exit 0
       # Checkout code from git
       - checkout
       # Restore from cache
