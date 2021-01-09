@@ -1021,15 +1021,15 @@ jobs:
                   --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
                   --tags project=Udapeople & 
 
-             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-             then
+            if [ ! -z "${OldWorkflowID}" ]
+            then
                   # your code here
                   echo "Cleaning old stack"
                   aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive --quiet
                   aws cloudformation delete-stack --stack-name "udapeople-front-end-${OldWorkflowID}"
                   aws cloudformation delete-stack --stack-name "udapeople-back-end-${OldWorkflowID}"
                   echo "Finished cleaning previous stack"
-             fi
+            fi
                       
       - slack/notify:
           channel: C01HKAG06F7
