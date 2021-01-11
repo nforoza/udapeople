@@ -1,6 +1,16 @@
-- name: "Copy backend files"
+- name: "Copy backend dist files"
   copy:
-    src: ~/project/backend/dist/
+    src:  ~/project/backend/dist/
     dest: /home/ubuntu/udapeople/
     owner: ubuntu
 
+- name: "Copy backend node modules"
+  copy:
+    src:  ~/project/backend/node_modules/
+    dest: /home/ubuntu/udapeople/node_modules/
+    owner: ubuntu
+
+- name: "Change the working directory and start pm2 app service"
+  shell: pm2 start main.js
+  args:
+    chdir: /home/ubuntu/udapeople/

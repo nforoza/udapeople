@@ -906,7 +906,7 @@ jobs:
               echo $test
               if ($test); # test if backend is running
               then
-               return 1 # failure test return to 0 after screenshot
+               return 0 # failure test return to 0 after screenshot
               else
                return 1
               fi

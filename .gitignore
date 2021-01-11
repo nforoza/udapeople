@@ -68,3 +68,5 @@ node_modules
 
 .env
 dist
+aws/udacity.pem
+aws/new_user_credentials.csv
