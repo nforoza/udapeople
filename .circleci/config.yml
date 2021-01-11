@@ -1016,8 +1016,7 @@ jobs:
                   --template-file .circleci/files/cloudfront.yml \
                   --stack-name "udapeople-cloudfront"  \
                   --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID}" \
-                  --tags project=Udapeople & 
-
+                  --tags project=Udapeople 
 
              if [ ! -z "${OldWorkflowID}" ]
              then
