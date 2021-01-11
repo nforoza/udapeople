@@ -1004,6 +1004,9 @@ jobs:
       - run:
           name: Update Cloudfront and Clean up old stack 
           command: |
+             # Re introducing this config to avoid WARNING: terminal is not fully functional
+             export AWS_PAGER=""
+             
              export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
             
