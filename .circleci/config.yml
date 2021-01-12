@@ -818,6 +818,7 @@ jobs:
             apk add --no-cache tar gzip
             apk add --update ansible
             apk add --update curl
+            apk add --update JQ
       
       # attach workspace
       - attach_workspace:
@@ -825,6 +826,7 @@ jobs:
       
       - run:
           name: Copy Files to server
+          no_output_timeout: 30m
           command: |
             cd ~/project/.circleci/ansible/
             ansible-playbook -i inventory.txt deploy-backend.yml
