@@ -825,6 +825,10 @@ jobs:
           at: ~/
       
       - run:
+          name: Compress Node Modules folder for deployment
+          command:  tar -cvzf ~/project/backend/node_modules.tar.gz ~/project/backend/node_modules
+
+      - run:
           name: Copy Files to server
           no_output_timeout: 30m
           command: |
