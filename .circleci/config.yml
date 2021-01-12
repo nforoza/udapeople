@@ -825,8 +825,10 @@ jobs:
           at: ~/
       
       - run:
-          name: Compress Node Modules folder for deployment
-          command:  tar -cvzf ~/project/backend/node_modules.tar.gz ~/project/backend/node_modules
+          name: Transfer compressed node modules and unarchive
+          command:  |
+            cd ~/project/backend/
+            tar -cvzf node_modules.tar.gz ./node_modules
 
       - run:
           name: Copy Files to server

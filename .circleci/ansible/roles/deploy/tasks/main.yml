@@ -4,18 +4,10 @@
     dest: /home/ubuntu/udapeople/
     owner: ubuntu
 
-- name: "Copy backend node modules"
-  copy:
+- unarchive:
     src:  ~/project/backend/node_modules.tar.gz
     dest: /home/ubuntu/udapeople/
-    owner: ubuntu
 
-- name: "Copy backend node modules"
-  shell: tar -xvzf node_modules.tar.gz 
-  args:
-    chdir: /home/ubuntu/udapeople/
-
-    
 - name: "Change the working directory and start pm2 app service"
   shell: pm2 start main.js
   args:
