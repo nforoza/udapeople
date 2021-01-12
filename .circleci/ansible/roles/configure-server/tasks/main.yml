@@ -19,6 +19,7 @@
     state: present
 
 - name: populate /etc/environment
+  become: true
   lineinfile:
     dest: "/etc/environment"
     state: present
