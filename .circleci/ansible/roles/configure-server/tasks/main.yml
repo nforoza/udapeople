@@ -3,7 +3,6 @@
   apt:
     update_cache: yes
     
-
 - name: "Install NodeJs"
   become: true
   apt:
@@ -18,4 +17,12 @@
     global: yes
     production: yes
     state: present
+
+- name: populate /etc/environment
+  lineinfile:
+    dest: "/etc/environment"
+    state: present
+    regexp: "^{{ item.key }}="
+    line: "{{ item.key }}={{ item.value}}"
+  with_items: "{{ os_environment }}"
    

@@ -728,8 +728,8 @@ jobs:
           command: |
             # Get second line from inventory where the backend ip 
             export BACKEND_IP=$(awk "NR==2" ~/project/.circleci/ansible/inventory.txt)
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            echo 'export API_URL="http://${BACKEND_IP}:3030"' >> $BASH_ENV
+      
       - run:
           name: Deploy frontend objects
           command: |
@@ -825,7 +825,7 @@ jobs:
           at: ~/
       
       - run:
-          name: Transfer compressed node modules and unarchive
+          name: Compress Node Modules folder for deployment
           command:  |
             cd ~/project/backend/
             tar -cvzf node_modules.tar.gz ./node_modules
@@ -908,13 +908,12 @@ jobs:
           command: |
               # your code here
               export BACKEND_IP=$(awk "NR==2" ~/project/.circleci/ansible/inventory.txt)
-              export API_URL="http://${BACKEND_IP}:3030"
+              export API_URL="http://${BACKEND_IP}:3030/api/status"
               echo "Api URL ${API_URL}"
-              test = $(curl -v -s --head ${API_URL})
-              echo $test
-              if ($test); # test if backend is running
+              test = $(curl -s ${API_URL})
+              if ($(echo $test | grep ok)); # test if backend is running should return json with status ok
               then
-               return 0 # failure test return to 0 after screenshot
+               return 0 
               else
                return 1
               fi
@@ -924,7 +923,7 @@ jobs:
           command: |
             # your code here
             export URL="https://udapeople-${WorkflowID}.s3.amazonaws.com"
-            if (curl -s --head ${URL}); # test if backend is running
+            if ($(curl -s ${URL} | grep Welcome)); # test if backend is running
               then
                return 0
               else
