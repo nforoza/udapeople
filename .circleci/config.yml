@@ -818,7 +818,7 @@ jobs:
             apk add --no-cache tar gzip
             apk add --update ansible
             apk add --update curl
-            apk add --update JQ
+
       
       # attach workspace
       - attach_workspace:
