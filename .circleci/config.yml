@@ -58,9 +58,9 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here
-            apt-get -y update
-            apt-get -y install awscli
-            apt-get -y install curl
+            sudo apt-get -y update
+            sudo apt-get -y install awscli
+            sudo apt-get -y install curl
 
       - restore_cache:
           key: 'frontend-build-{{arch}}'
@@ -132,9 +132,9 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here
-            apt-get -y update
-            apt-get -y install awscli
-            apt-get -y install curl
+            sudo apt-get -y update
+            sudo apt-get -y install awscli
+            sudo apt-get -y install curl
 
       - restore_cache:
           key: 'backend-build--2-{{arch}}-{{ checksum "backend/package.json" }}'
@@ -215,9 +215,9 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here
-            apt-get -y update
-            apt-get -y install awscli
-            apt-get -y install curl
+            sudo apt-get -y update
+            sudo apt-get -y install awscli
+            sudo apt-get -y install curl
 
       # Restore from cache
       - restore_cache:
@@ -288,9 +288,9 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here
-            apt-get -y update
-            apt-get -y install awscli
-            apt-get -y install curl
+            sudo apt-get -y update
+            sudo apt-get -y install awscli
+            sudo apt-get -y install curl
       # Restore from cache
       - restore_cache:
           key: 'backend-build-2-{{arch}}-{{ checksum "backend/package.json" }}'
@@ -358,9 +358,9 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here
-            apt-get -y update
-            apt-get -y install awscli
-            apt-get -y install curl
+            sudo apt-get -y update
+            sudo apt-get -y install awscli
+            sudo apt-get -y install curl
       # Restore from cache
       - restore_cache:
           key: 'frontend-build-{{arch}}-{{ checksum "frontend/package.json" }}'
@@ -429,9 +429,9 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here
-            apt-get -y update
-            apt-get -y install awscli
-            apt-get -y install curl
+            sudo apt-get -y update
+            sudo apt-get -y install awscli
+            sudo apt-get -y install curl
 
       # Restore from cache
       - restore_cache:
@@ -684,9 +684,9 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here
-            apt-get -y update
-            apt-get -y install awscli
-            apt-get -y install curl
+            sudo apt-get -y update
+            sudo apt-get -y install awscli
+            sudo apt-get -y install curl
 
       # Restore from cache
       - restore_cache:
