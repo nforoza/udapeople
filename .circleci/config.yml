@@ -823,6 +823,7 @@ jobs:
             apk add --no-cache tar gzip
             apk add --update ansible
             apk add --update curl
+            apk add --update jq
 
       
       # attach workspace
@@ -842,6 +843,11 @@ jobs:
             cd ~/project/.circleci/ansible/
             ansible-playbook -i inventory.txt deploy-backend.yml
       
+      - run:
+          name: Dummy failure
+          command: |
+            exit 1
+
       - slack/notify:
           channel: C01HKAG06F7
           event: fail
@@ -888,7 +894,14 @@ jobs:
                       }
                     ]
                   }
-      # Here's where you will add some code to rollback on failure
+      # Here's where you will add some code to rollback on failur
+      - run:
+          name: Install aws cli for rollback procedure
+          when: on_fail 
+          command: |
+            pip install --upgrade pip 
+            pip install awscli
+      
       - destroy-environment:
           workflow-id: $CIRCLE_WORKFLOW_ID 
 
