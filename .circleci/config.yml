@@ -625,7 +625,7 @@ jobs:
 
       # Restore from cache
       - restore_cache:
-          key: 'backend-build-{{arch}}-{{ checksum "backend/package.json" }}'
+          key: 'backend-build-2-{{arch}}-{{ checksum "backend/package.json" }}'
 
       - run:
           name: Run migrations
