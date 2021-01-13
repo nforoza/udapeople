@@ -545,6 +545,8 @@ jobs:
             # Your code here
             apk add --no-cache tar gzip
             apk add --update ansible
+            apk add --update curl
+            apk add --update jq
       
       # attach workspace
       - attach_workspace:
@@ -843,11 +845,6 @@ jobs:
             cd ~/project/.circleci/ansible/
             ansible-playbook -i inventory.txt deploy-backend.yml
       
-      - run:
-          name: Dummy failure
-          command: |
-            exit 1
-
       - slack/notify:
           channel: C01HKAG06F7
           event: fail
@@ -916,10 +913,10 @@ jobs:
           command: |
             # your code here
             apk add --update curl
+            apk add --update jq
       
       - attach_workspace:
           at: ~/
-
 
       - run:
           name: Backend smoke test.
@@ -943,7 +940,7 @@ jobs:
             echo "Front end URL ${URL}"
             if (curl -s ${URL} | grep Welcome); # test if backend is running
             then
-               return 0
+               return 1
             else
                return 1
             fi
