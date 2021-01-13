@@ -53,6 +53,15 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            apt-get -y update
+            apt-get -y install awscli
+            apt-get -y install curl
+
       - restore_cache:
           key: 'frontend-build-{{arch}}'
       - run:
@@ -118,6 +127,15 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            apt-get -y update
+            apt-get -y install awscli
+            apt-get -y install curl
+
       - restore_cache:
           key: 'backend-build--2-{{arch}}-{{ checksum "backend/package.json" }}'
       - run:
@@ -191,6 +209,16 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+
+      # Dependencies
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            apt-get -y update
+            apt-get -y install awscli
+            apt-get -y install curl
+
       # Restore from cache
       - restore_cache:
           key: 'frontend-build-{{arch}}-{{ checksum "frontend/package.json" }}'
@@ -255,6 +283,14 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      # Dependencies
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            apt-get -y update
+            apt-get -y install awscli
+            apt-get -y install curl
       # Restore from cache
       - restore_cache:
           key: 'backend-build-2-{{arch}}-{{ checksum "backend/package.json" }}'
@@ -317,6 +353,14 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      # Dependencies
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            apt-get -y update
+            apt-get -y install awscli
+            apt-get -y install curl
       # Restore from cache
       - restore_cache:
           key: 'frontend-build-{{arch}}-{{ checksum "frontend/package.json" }}'
@@ -379,6 +423,16 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      
+      # Dependencies
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            apt-get -y update
+            apt-get -y install awscli
+            apt-get -y install curl
+
       # Restore from cache
       - restore_cache:
           key:  'backend-build-2-{{arch}}-{{ checksum "backend/package.json" }}'
@@ -626,6 +680,14 @@ jobs:
       # Checkout code from git
       - checkout
 
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            apt-get -y update
+            apt-get -y install awscli
+            apt-get -y install curl
+
       # Restore from cache
       - restore_cache:
           key: 'backend-build-2-{{arch}}-{{ checksum "backend/package.json" }}'
@@ -693,6 +755,9 @@ jobs:
                     ]
                   }
      # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID
+    
       - revert-migrations:
           workflow-id: $CIRCLE_WORKFLOW_ID
         
@@ -794,6 +859,9 @@ jobs:
                   }
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID
+
+      - revert-migrations:
           workflow-id: $CIRCLE_WORKFLOW_ID      
                     
   deploy-backend:
@@ -901,6 +969,9 @@ jobs:
       
       - destroy-environment:
           workflow-id: $CIRCLE_WORKFLOW_ID 
+      
+      - revert-migrations:
+          workflow-id: $CIRCLE_WORKFLOW_ID
 
   smoke-test:
     docker:
@@ -914,6 +985,13 @@ jobs:
             # your code here
             apk add --update curl
             apk add --update jq
+            apk add  --no-cache \
+                        python3 \
+                        py3-pip \
+                    && pip3 install --upgrade pip \
+                    && pip3 install \
+                        awscli \
+                    && rm -rf /var/cache/apk/*
       
       - attach_workspace:
           at: ~/
@@ -993,19 +1071,10 @@ jobs:
                   }
 
       # Here's where you will add some code to rollback on failure
-      - run:
-          name: Install awscli for rollingback
-          when: on_fail
-          command: |
-            apk add  --no-cache \
-                        python3 \
-                        py3-pip \
-                    && pip3 install --upgrade pip \
-                    && pip3 install \
-                        awscli \
-                    && rm -rf /var/cache/apk/*
-
       - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID
+      
+      - revert-migrations:
           workflow-id: $CIRCLE_WORKFLOW_ID
 
   cloudfront-update:
@@ -1102,6 +1171,9 @@ jobs:
                   }
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
+          workflow-id: $CIRCLE_WORKFLOW_ID
+     
+      - revert-migrations:
           workflow-id: $CIRCLE_WORKFLOW_ID
 
 workflows:
