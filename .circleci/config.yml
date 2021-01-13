@@ -728,12 +728,16 @@ jobs:
           command: |
             # Get second line from inventory where the backend ip 
             export BACKEND_IP=$(awk "NR==2" ~/project/.circleci/ansible/inventory.txt)
+            echo "Back end ip is ${BACKEND_IP}"
             echo 'export API_URL="http://${BACKEND_IP}:3030"' >> $BASH_ENV
       
       - run:
           name: Deploy frontend objects
           command: |
             # your code here
+            export BACKEND_IP=$(awk "NR==2" ~/project/.circleci/ansible/inventory.txt)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL ${API_URL}"
             cd ./frontend
             npm run build
             cd ./dist
