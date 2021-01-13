@@ -1018,7 +1018,7 @@ jobs:
             echo "Front end URL ${URL}"
             if (curl -s ${URL} | grep Welcome); # test if backend is running
             then
-               return 1
+               return 0
             else
                return 1
             fi
