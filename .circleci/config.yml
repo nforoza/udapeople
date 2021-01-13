@@ -1201,6 +1201,7 @@ workflows:
           context:
             - circleci-udapeople-slack
           requires: [build-frontend]
+          
       - deploy-infrastructure:
           context: 
             - circleci-udapeople-slack
@@ -1209,23 +1210,38 @@ workflows:
             branches:
               only: 
                 - main
+
       - configure-infrastructure:
           context:
             - circleci-udapeople-slack
           requires: [deploy-infrastructure]
+          filters:
+            branches:
+              only: 
+                - main
+
       - run-migrations:
           context:
             - circleci-udapeople-slack
           requires: [configure-infrastructure]
+          filters:
+            branches:
+              only: 
+                - main
 
       - deploy-frontend:
           context:
             - circleci-udapeople-slack
           requires: [run-migrations]
+          filters:
+            branches:
+              only: 
+                - main
       - deploy-backend:
           context:
             - circleci-udapeople-slack
           requires: [run-migrations]
+          
       - smoke-test:
           context:
             - circleci-udapeople-slack
