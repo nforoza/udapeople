@@ -921,7 +921,7 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-            export URL="https://udapeople-${CIRCLE_WORKFLOW_ID}.s3.amazonaws.com"
+            export URL="https://udapeople-${CIRCLE_WORKFLOW_ID}.s3.amazonaws.com/index.html"
             echo "Front end URL ${URL}"
             if (curl -s ${URL} | grep Welcome); # test if backend is running
             then
