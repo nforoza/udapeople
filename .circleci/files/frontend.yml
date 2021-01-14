@@ -12,6 +12,20 @@ Resources:
     Properties:
       BucketName: !Sub "udapeople-${ID}"
       AccessControl: PublicRead
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+              - DELETE
+            AllowedOrigins:
+              - '*'
+            ExposedHeaders:
+            Id: myCORSRuleId1
+            MaxAge: '3600'
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: 404.html
