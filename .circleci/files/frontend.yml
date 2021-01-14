@@ -23,7 +23,7 @@ Resources:
               - DELETE
             AllowedOrigins:
               - '*'
-            ExposedHeaders:
+            ExposedHeaders: []
             Id: myCORSRuleId1
             MaxAge: '3600'
       WebsiteConfiguration:
